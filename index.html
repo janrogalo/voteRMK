@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Drag and Drop Panel</title>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.13.0/Sortable.min.js"></script>
+  <style>
+    body {
+      background-color: #f7f7f7;
+      font-family: Arial, sans-serif;
+    }
+
+    #image-panel {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .image-container {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin: 5px;
+    }
+
+    .image {
+      width: 100%;
+      height: 100%;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    .image-position {
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      padding: 3px 8px;
+      background-color: red;
+      color: #fff;
+      font-size: 12px;
+      border-radius: 50%;
+    }
+
+    #vote-form {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    #vote-form label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    #vote-form input[type="email"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    #vote-form button[type="submit"] {
+      padding: 10px 20px;
+      background-color: yellow;
+      color: #fff;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #vote-form button[type="submit"]:hover {
+      background-color: #f7d23b;
+    }
+  </style>
+</head>
+<body>
+  <div id="image-panel">
+    <div class="image-container">
+      <img class="image" src="image1.jpg" alt="Image 1" data-id="1">
+      <span class="image-position">1</span>
+    </div>
+    <div class="image-container">
+      <img class="image" src="image2.jpg" alt="Image 2" data-id="2">
+      <span class="image-position">2</span>
+    </div>
+    <!-- Add more image containers -->
+  </div>
+
+  <form id="vote-form">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    var imagePanel = document.getElementById('image-panel');
+    var sortable = Sortable.create(imagePanel, {
+      onEnd: function (event) {
+        var items = imagePanel.getElementsByClassName('image-container');
+
+        // Update the position numbers
+        for (var i = 0; i < items.length; i++) {
+          var imagePosition = items[i].querySelector('.image-position');
+          imagePosition.innerText = i + 1;
+        }
+      }
+    });
+
+    var voteForm = document.getElementById('vote-form');
+    voteForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      var email = document.getElementById('email').value;
+      var imageContainers = document.getElementsByClassName('image-container');
+      var voteData = {};
+
+      for (var i = 0; i < imageContainers.length; i++) {
+        var imageContainer = imageContainers[i];
+        var imageId = imageContainer.querySelector('.image').getAttribute('data-id');
+        var imagePosition = imageContainer.querySelector('.image-position').innerText;
+
+        voteData['image' + imageId] = imagePosition;
+      }
+
+      console.log('Vote Data:', { email: email, voteData: voteData });
+
+      // Perform additional actions (e.g., send the data to the server)
+    });
+  </script>
+</body>
+</html>
